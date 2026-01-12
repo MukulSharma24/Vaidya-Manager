@@ -1,0 +1,7 @@
+*.tar
+*.tar.gz
+*.bak
+*.sql
+db-backup/
+mssql-data-backup*
+
