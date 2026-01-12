@@ -1,0 +1,883 @@
+/* ========================================
+   FORCE LIGHT THEME - Professional & Clean
+   Override dark mode and apply light theme
+   ======================================== */
+
+/* Force Light Theme - Override System Preferences */
+:root,
+html,
+body {
+    /* Force Light Background Colors */
+    --color-background: rgba(250, 250, 248, 1) !important;
+    --color-surface: rgba(255, 255, 255, 1) !important;
+    --color-text: rgba(19, 52, 59, 1) !important;
+    --color-text-secondary: rgba(98, 108, 113, 1) !important;
+
+    /* Professional Green Accent */
+    --color-primary: rgba(46, 139, 87, 1) !important;
+    --color-primary-hover: rgba(40, 120, 75, 1) !important;
+    --color-primary-active: rgba(35, 105, 65, 1) !important;
+
+    /* Light Theme Secondary Colors */
+    --color-secondary: rgba(46, 139, 87, 0.08) !important;
+    --color-secondary-hover: rgba(46, 139, 87, 0.12) !important;
+    --color-secondary-active: rgba(46, 139, 87, 0.16) !important;
+
+    /* Borders */
+    --color-border: rgba(220, 220, 220, 1) !important;
+    --color-card-border: rgba(230, 230, 230, 1) !important;
+    --color-card-border-inner: rgba(240, 240, 240, 1) !important;
+
+    /* Status Colors - Light Theme */
+    --color-error: rgba(220, 38, 38, 1) !important;
+    --color-success: rgba(46, 139, 87, 1) !important;
+    --color-warning: rgba(217, 119, 6, 1) !important;
+    --color-info: rgba(59, 130, 246, 1) !important;
+
+    /* Button Text */
+    --color-btn-primary-text: rgba(255, 255, 255, 1) !important;
+
+    /* Focus Ring */
+    --color-focus-ring: rgba(46, 139, 87, 0.3) !important;
+
+    /* RGB Values for Light Theme */
+    --color-success-rgb: 46, 139, 87 !important;
+    --color-error-rgb: 220, 38, 38 !important;
+    --color-warning-rgb: 217, 119, 6 !important;
+    --color-info-rgb: 59, 130, 246 !important;
+
+    /* Light Shadows */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04) !important;
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Force Light Theme on All Elements */
+* {
+    color-scheme: light !important;
+}
+
+/* Force Light Background */
+html,
+body {
+    background-color: var(--color-background) !important;
+    color: var(--color-text) !important;
+}
+
+/* Fix all search inputs - prevent icon repetition */
+input[type="search"],
+.search-bar input,
+#patientSearchInput,
+#pharmacyMedicineSearchInput,
+#appointmentSearch,
+#prescriptionPatientSearch,
+#pharmacyMedicineSearch {
+    background-repeat: no-repeat !important;
+}
+
+/* Header - Light Professional */
+.app-header {
+    background: rgba(255, 255, 255, 1) !important;
+    border-bottom: 1px solid rgba(230, 230, 230, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Navigation - Light */
+.app-nav {
+    background: rgba(255, 255, 255, 1) !important;
+    border-bottom: 1px solid rgba(230, 230, 230, 1) !important;
+}
+
+.nav-item {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.nav-item:hover {
+    background: rgba(46, 139, 87, 0.08) !important;
+}
+
+.nav-item.active {
+    background: rgba(46, 139, 87, 1) !important;
+    color: white !important;
+}
+
+/* Main Content Area - Light */
+.app-main {
+    background: rgba(250, 250, 248, 1) !important;
+}
+
+/* Cards - Clean White */
+.card,
+.stat-card,
+.patient-card,
+.medicine-card,
+.medicine-item,
+.medicine-list-item,
+.appointment-item,
+.therapy-card,
+.report-card,
+.todays-appointments-widget,
+.diet-preview,
+.timeline-date-group {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 1px solid rgba(230, 230, 230, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+.card:hover,
+.stat-card:hover,
+.patient-card:hover,
+.appointment-item:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(46, 139, 87, 0.3) !important;
+}
+
+/* Form Elements - Light */
+.form-control,
+input,
+textarea,
+select {
+    background-color: rgba(255, 255, 255, 1) !important;
+    border: 1px solid rgba(220, 220, 220, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+/* Prevent background image repetition on inputs */
+input[type="search"],
+input[type="text"] {
+    background-repeat: no-repeat !important;
+}
+
+.form-control:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: rgba(46, 139, 87, 1) !important;
+    background-color: rgba(255, 255, 255, 1) !important;
+    outline: 2px solid rgba(46, 139, 87, 0.2) !important;
+}
+
+/* Buttons - Professional */
+.btn--primary {
+    background: rgba(46, 139, 87, 1) !important;
+    color: white !important;
+}
+
+.btn--primary:hover {
+    background: rgba(40, 120, 75, 1) !important;
+}
+
+.btn--secondary {
+    background: rgba(46, 139, 87, 0.08) !important;
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.btn--secondary:hover {
+    background: rgba(46, 139, 87, 0.12) !important;
+}
+
+.btn--outline {
+    background: transparent !important;
+    border: 1px solid rgba(220, 220, 220, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.btn--outline:hover {
+    background: rgba(46, 139, 87, 0.08) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+}
+
+/* Status Badges - Light Theme */
+.status,
+.stock-badge,
+.appointment-status {
+    font-weight: 600 !important;
+}
+
+.status--success,
+.stock-badge.in-stock {
+    background-color: rgba(220, 252, 231, 1) !important;
+    color: rgba(21, 128, 61, 1) !important;
+    border: 1px solid rgba(187, 247, 208, 1) !important;
+}
+
+.status--error,
+.stock-badge.low-stock {
+    background-color: rgba(254, 226, 226, 1) !important;
+    color: rgba(185, 28, 28, 1) !important;
+    border: 1px solid rgba(252, 165, 165, 1) !important;
+}
+
+.status--warning {
+    background-color: rgba(254, 243, 199, 1) !important;
+    color: rgba(180, 83, 9, 1) !important;
+    border: 1px solid rgba(253, 230, 138, 1) !important;
+}
+
+.status--info {
+    background-color: rgba(224, 242, 254, 1) !important;
+    color: rgba(30, 64, 175, 1) !important;
+    border: 1px solid rgba(186, 230, 253, 1) !important;
+}
+
+/* Appointment Status Colors - Light Theme */
+.appointment-status.scheduled {
+    background: rgba(243, 244, 246, 1) !important;
+    color: rgba(75, 85, 99, 1) !important;
+    border-color: rgba(209, 213, 219, 1) !important;
+}
+
+.appointment-status.in-progress {
+    background: rgba(254, 243, 199, 1) !important;
+    color: rgba(180, 83, 9, 1) !important;
+    border-color: rgba(253, 230, 138, 1) !important;
+}
+
+.appointment-status.completed {
+    background: rgba(220, 252, 231, 1) !important;
+    color: rgba(21, 128, 61, 1) !important;
+    border-color: rgba(187, 247, 208, 1) !important;
+}
+
+.appointment-status.cancelled {
+    background: rgba(254, 226, 226, 1) !important;
+    color: rgba(185, 28, 28, 1) !important;
+    border-color: rgba(252, 165, 165, 1) !important;
+}
+
+.appointment-status.rescheduled {
+    background: rgba(237, 233, 254, 1) !important;
+    color: rgba(109, 40, 217, 1) !important;
+    border-color: rgba(221, 214, 254, 1) !important;
+}
+
+/* Appointment Time Colors - Light Theme */
+.appointment-time.scheduled,
+.timeline-time.scheduled {
+    color: rgba(75, 85, 99, 1) !important;
+}
+
+.appointment-time.in-progress,
+.timeline-time.in-progress {
+    color: rgba(217, 119, 6, 1) !important;
+}
+
+.appointment-time.completed,
+.timeline-time.completed {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+.appointment-time.cancelled,
+.timeline-time.cancelled {
+    color: rgba(220, 38, 38, 1) !important;
+}
+
+.appointment-time.rescheduled,
+.timeline-time.rescheduled {
+    color: rgba(147, 51, 234, 1) !important;
+}
+
+/* Headings - Professional Green */
+h1, h2, h3, h4, h5, h6 {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.view-header h2,
+.widget-header h3,
+h3 {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+/* Text Colors */
+p,
+span,
+div {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.user-name,
+.patient-name,
+.appointment-patient {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.user-role,
+.patient-info p,
+.appointment-type {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+/* Stat Cards - Light & Colorful */
+.stat-icon {
+    background: rgba(46, 139, 87, 0.1) !important;
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+.stat-content h3 {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+/* Medicine Names - Highly Visible in Light Mode */
+#medicineList > div > h3,
+#pharmacyMedicinesList > div > h3,
+.medicine-card > h3,
+.medicine-item > h3 {
+    color: rgba(19, 52, 59, 1) !important;
+    font-weight: 700 !important;
+}
+
+#medicineList > div > div,
+#pharmacyMedicinesList > div > div,
+.medicine-card > div,
+.medicine-item > div {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+/* Modal - Light */
+.modal {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(230, 230, 230, 1) !important;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(230, 230, 230, 1) !important;
+}
+
+/* Scrollbar - Light Theme */
+::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(245, 245, 245, 1) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(200, 200, 200, 1) !important;
+    border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(46, 139, 87, 1) !important;
+}
+
+/* Empty States - Light */
+.empty-state {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+.empty-state h4 {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+/* Timeline & Appointments - Light */
+.timeline-date-group {
+    background: rgba(255, 255, 255, 1) !important;
+}
+
+.timeline-date-header {
+    color: rgba(46, 139, 87, 1) !important;
+    border-bottom: 2px solid rgba(230, 230, 230, 1) !important;
+}
+
+.timeline-appointment {
+    background: rgba(250, 250, 248, 1) !important;
+}
+
+.timeline-appointment:hover {
+    border-color: rgba(46, 139, 87, 1) !important;
+}
+
+/* Constitution Buttons - Light */
+.constitution-btn {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid rgba(220, 220, 220, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.constitution-btn:hover {
+    border-color: rgba(46, 139, 87, 1) !important;
+    background: rgba(46, 139, 87, 0.08) !important;
+}
+
+.constitution-btn.active {
+    border-color: rgba(46, 139, 87, 1) !important;
+    background: rgba(46, 139, 87, 1) !important;
+    color: white !important;
+}
+
+/* Meal Time Cards - Light */
+.meal-time {
+    background: rgba(250, 250, 248, 1) !important;
+}
+
+.meal-time h4 {
+    color: rgba(217, 119, 6, 1) !important;
+}
+
+/* Patient Avatar - Light */
+.patient-avatar {
+    background: rgba(46, 139, 87, 1) !important;
+    color: white !important;
+}
+
+/* Charts Container - Light */
+.chart-container {
+    background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Remove Button - Light Theme */
+.btn-remove {
+    background: rgba(220, 38, 38, 1) !important;
+    color: white !important;
+}
+
+.btn-remove:hover {
+    background: rgba(185, 28, 28, 1) !important;
+}
+
+/* Status Dropdown - Light Theme */
+.status-dropdown {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid !important;
+}
+
+.status-dropdown.scheduled {
+    background: rgba(243, 244, 246, 1) !important;
+    color: rgba(75, 85, 99, 1) !important;
+    border-color: rgba(209, 213, 219, 1) !important;
+}
+
+.status-dropdown.in-progress {
+    background: rgba(254, 243, 199, 1) !important;
+    color: rgba(180, 83, 9, 1) !important;
+    border-color: rgba(253, 230, 138, 1) !important;
+}
+
+.status-dropdown.completed {
+    background: rgba(220, 252, 231, 1) !important;
+    color: rgba(21, 128, 61, 1) !important;
+    border-color: rgba(187, 247, 208, 1) !important;
+}
+
+.status-dropdown.cancelled {
+    background: rgba(254, 226, 226, 1) !important;
+    color: rgba(185, 28, 28, 1) !important;
+    border-color: rgba(252, 165, 165, 1) !important;
+}
+
+.status-dropdown.rescheduled {
+    background: rgba(237, 233, 254, 1) !important;
+    color: rgba(109, 40, 217, 1) !important;
+    border-color: rgba(221, 214, 254, 1) !important;
+}
+
+/* Prescription Management - Light Theme Override */
+#prescriptionManagementView {
+    background: rgba(250, 250, 248, 1) !important;
+}
+
+#prescriptionManagementView .view-header {
+    background: rgba(255, 255, 255, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+    border-bottom: 2px solid rgba(46, 139, 87, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+#prescriptionManagementView .view-header h2 {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+#prescriptionManagementView .view-header p {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+/* Patient Selection Panel - Light */
+.patient-selection-panel {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 1px solid rgba(230, 230, 230, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+.patient-selection-panel h3 {
+    color: rgba(19, 52, 59, 1) !important;
+    border-bottom: 2px solid rgba(46, 139, 87, 1) !important;
+}
+
+.patient-search-box input {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid rgba(220, 220, 220, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+    background-repeat: no-repeat !important;
+}
+
+.patient-search-box input:focus {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+    background-repeat: no-repeat !important;
+}
+
+.patient-search-box input::placeholder {
+    color: rgba(156, 163, 175, 1) !important;
+}
+
+/* Patient List Items - Light */
+.patient-list-item {
+    background: rgba(250, 250, 248, 1) !important;
+    border: 2px solid transparent !important;
+}
+
+.patient-list-item:hover {
+    background: rgba(46, 139, 87, 0.08) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+}
+
+.patient-list-item.selected {
+    background: rgba(220, 252, 231, 1) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+}
+
+.patient-list-item-name {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.patient-list-item.selected .patient-list-item-name {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+.patient-list-item-info {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+/* Prescription Builder Panel - Light */
+.prescription-builder-panel {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 1px solid rgba(230, 230, 230, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Patient Header in Prescription - Light */
+.prescription-patient-header {
+    background: rgba(220, 252, 231, 1) !important;
+    border: 2px solid rgba(46, 139, 87, 1) !important;
+    box-shadow: 0 2px 8px rgba(46, 139, 87, 0.15) !important;
+}
+
+.prescription-patient-header::before {
+    background: linear-gradient(90deg, rgba(46, 139, 87, 1) 0%, rgba(34, 197, 94, 1) 100%) !important;
+}
+
+.prescription-patient-header h3 {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+.prescription-patient-details span {
+    background: rgba(255, 255, 255, 1) !important;
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+.prescription-patient-details strong {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+/* Medicine Selection Tabs - Light */
+.medicine-selection-tabs {
+    background: rgba(243, 244, 246, 1) !important;
+}
+
+.medicine-tab {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+.medicine-tab:hover {
+    background: rgba(229, 231, 235, 1) !important;
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+.medicine-tab.active {
+    background: rgba(46, 139, 87, 1) !important;
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(46, 139, 87, 0.3) !important;
+}
+
+/* Pharmacy Medicine Search - Light */
+.pharmacy-medicine-search {
+    background: rgba(255, 255, 255, 1) !important;
+}
+
+.pharmacy-medicine-search input {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid rgba(220, 220, 220, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%232E8B57' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+}
+
+.pharmacy-medicine-search input:focus {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+    background-repeat: no-repeat !important;
+}
+
+.pharmacy-medicine-search input::placeholder {
+    color: rgba(156, 163, 175, 1) !important;
+}
+
+/* Medicine Cards - Light */
+.medicine-select-card {
+    background: rgba(250, 250, 248, 1) !important;
+    border: 2px solid rgba(230, 230, 230, 1) !important;
+}
+
+.medicine-select-card:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.medicine-select-name {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.medicine-select-name-sanskrit {
+    color: rgba(107, 114, 128, 1) !important;
+}
+
+.medicine-select-details {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+/* Current Prescription Section - Light */
+.current-prescription-section {
+    background: rgba(250, 250, 248, 1) !important;
+    border: 2px solid rgba(230, 230, 230, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+.current-prescription-section h4 {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+/* Prescription Medicine Items - Light */
+.prescription-medicine-item {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid rgba(230, 230, 230, 1) !important;
+    border-left: 4px solid rgba(46, 139, 87, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+.prescription-medicine-item:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.prescription-medicine-item.external {
+    border-left-color: rgba(217, 119, 6, 1) !important;
+}
+
+.prescription-medicine-name {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.prescription-medicine-dosage {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+.prescription-medicine-dosage span {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+/* Prescription Notes - Light */
+.prescription-notes-section label {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.prescription-notes-section textarea {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid rgba(220, 220, 220, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.prescription-notes-section textarea:focus {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+}
+
+.prescription-notes-section textarea::placeholder {
+    color: rgba(156, 163, 175, 1) !important;
+}
+
+/* Prescription Actions Buttons - Light */
+.prescription-actions {
+    border-top: 2px solid rgba(230, 230, 230, 1) !important;
+}
+
+#cancelPrescriptionBtn {
+    background: transparent !important;
+    color: rgba(98, 108, 113, 1) !important;
+    border: 2px solid rgba(220, 220, 220, 1) !important;
+}
+
+#cancelPrescriptionBtn:hover {
+    background: rgba(243, 244, 246, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+    border-color: rgba(156, 163, 175, 1) !important;
+}
+
+#savePrescriptionBtn {
+    background: rgba(46, 139, 87, 1) !important;
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(46, 139, 87, 0.3) !important;
+}
+
+#savePrescriptionBtn:hover {
+    background: rgba(40, 120, 75, 1) !important;
+}
+
+/* Recent Prescriptions - Light */
+.recent-prescriptions-section h3 {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+.prescription-history-card {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid rgba(230, 230, 230, 1) !important;
+    border-left: 4px solid rgba(46, 139, 87, 1) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+.prescription-history-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+}
+
+.prescription-history-number {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+.prescription-history-date {
+    color: rgba(107, 114, 128, 1) !important;
+}
+
+.prescription-history-patient {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.prescription-history-details,
+.prescription-history-medicines {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+.prescription-history-medicines {
+    background: rgba(243, 244, 246, 1) !important;
+}
+
+/* Empty State - Light */
+.prescription-empty-state {
+    color: rgba(98, 108, 113, 1) !important;
+}
+
+.prescription-empty-state h4 {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.prescription-empty-state p {
+    color: rgba(107, 114, 128, 1) !important;
+}
+
+/* External Medicine Form - Light */
+.external-medicine-form {
+    background: rgba(250, 250, 248, 1) !important;
+    border: 2px solid rgba(230, 230, 230, 1) !important;
+}
+
+.external-medicine-form h4 {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.external-medicine-form .form-label {
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.external-medicine-form .form-control {
+    background: rgba(255, 255, 255, 1) !important;
+    border: 2px solid rgba(220, 220, 220, 1) !important;
+    color: rgba(19, 52, 59, 1) !important;
+}
+
+.external-medicine-form .form-control:focus {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: rgba(46, 139, 87, 1) !important;
+}
+
+.external-medicine-form .form-control::placeholder {
+    color: rgba(156, 163, 175, 1) !important;
+}
+
+.external-medicine-form .btn--primary {
+    background: rgba(46, 139, 87, 1) !important;
+    color: white !important;
+}
+
+.external-medicine-form .btn--primary:hover {
+    background: rgba(40, 120, 75, 1) !important;
+}
+
+/* Scrollbars - Light Theme */
+.prescription-builder-panel::-webkit-scrollbar-track,
+.patient-selection-panel::-webkit-scrollbar-track,
+.medicine-selection-area::-webkit-scrollbar-track,
+.prescription-medicine-list::-webkit-scrollbar-track {
+    background: rgba(243, 244, 246, 1) !important;
+}
+
+.prescription-builder-panel::-webkit-scrollbar-thumb,
+.patient-selection-panel::-webkit-scrollbar-thumb,
+.medicine-selection-area::-webkit-scrollbar-thumb,
+.prescription-medicine-list::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 1) !important;
+}
+
+.prescription-builder-panel::-webkit-scrollbar-thumb:hover,
+.patient-selection-panel::-webkit-scrollbar-thumb:hover,
+.medicine-selection-area::-webkit-scrollbar-thumb:hover,
+.prescription-medicine-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(46, 139, 87, 1) !important;
+}
+
+/* Therapy Cards - Light */
+.therapy-card h3 {
+    color: rgba(46, 139, 87, 1) !important;
+}
+
+/* Loading Spinner - Light */
+.loading::after {
+    border-color: rgba(220, 220, 220, 1) !important;
+    border-top-color: rgba(46, 139, 87, 1) !important;
+}
+
+/* Force Light Theme on Login Screen */
+.login-screen {
+    background: linear-gradient(135deg, rgba(46, 139, 87, 1) 0%, rgba(34, 197, 94, 1) 100%) !important;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure all text is visible in light mode */
+* {
+    opacity: 1 !important;
+    visibility: visible !important;
+}

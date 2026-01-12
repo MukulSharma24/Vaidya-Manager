@@ -1,0 +1,80 @@
+version: "3.9"
+services:
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: clinic-sqlserver
+    platform: linux/arm64
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=Shajag123!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - clinic-network
+
+  db-init:
+    image: mcr.microsoft.com/mssql-tools
+    container_name: clinic-db-init
+    platform: linux/arm64
+    depends_on:
+      - sqlserver
+    volumes:
+      - ./database:/scripts:ro
+    networks:
+      - clinic-network
+    entrypoint: /bin/bash
+    command: >
+      -c "
+        echo '⏳ Waiting for SQL Server to accept connections...';
+        until /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Shajag123!' -Q 'SELECT 1' >/dev/null 2>&1; do
+          sleep 2;
+        done
+        echo '✅ SQL Server is ready — running init scripts';
+
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Shajag123!' -Q \"IF DB_ID('clinicdb') IS NULL CREATE DATABASE clinicdb;\" || true;
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Shajag123!' -d clinicdb -i /scripts/01_master_tables.sql || true;
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Shajag123!' -d clinicdb -i /scripts/02_patient_tables.sql || true;
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Shajag123!' -d clinicdb -i /scripts/03_staff_tables.sql || true;
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Shajag123!' -d clinicdb -i /scripts/04_other.sql || true;
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Shajag123!' -d clinicdb -i /scripts/init.sql || true;
+
+        echo '🎉 DB init finished';
+      "
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: clinic-backend
+    environment:
+      - NODE_ENV=development
+      - DB_SERVER=sqlserver
+      - DB_USER=sa
+      - DB_PASS=Shajag123!
+      - DB_NAME=clinicdb
+      - DB_PORT=1433
+      - PORT=4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    networks:
+      - clinic-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+
+networks:
+  clinic-network:
+    driver: bridge
+
+
+
+
+
+

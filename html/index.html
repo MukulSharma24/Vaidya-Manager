@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shajag Vaidya Manager - Vigilant Care, Traditional Wisdom</title>
+
+    <!-- Main CSS Files -->
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- View-specific CSS Files -->
+    <link rel="stylesheet" href="../css/views/dashboard.css">
+    <link rel="stylesheet" href="../css/views/appointments.css">
+    <link rel="stylesheet" href="../css/views/patients.css">
+    <link rel="stylesheet" href="../css/views/prescription.css">
+    <link rel="stylesheet" href="../css/views/PrescriptionManagement.css">
+    <link rel="stylesheet" href="../css/views/therapy.css">
+
+    <link rel="stylesheet" href="../css/views/diet.css">
+    <link rel="stylesheet" href="../css/views/reports.css">
+    <link rel="stylesheet" href="../css/views/communication.css">
+    <link rel="stylesheet" href="../css/views/staffmanagement.css">
+    <link rel="stylesheet" href="../css/views/billing.css">
+    <link rel="stylesheet" href="../css/views/pharmacy.css">
+    <link rel="stylesheet" href="../css/views/dashboard.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* FAILSAFE: Ensure .hidden class works */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<script>
+    function goWizardStep(step) {
+        document.querySelectorAll('.wizard-panel').forEach(panel => {
+            panel.classList.toggle('active', panel.dataset.step == step);
+        });
+        document.querySelectorAll('.wizard-step').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.step == step);
+        });
+    }
+</script>
+
+<body>
+<!-- Login Screen -->
+<div id="loginScreen" class="login-screen">
+    <div class="login-container">
+        <div class="login-header">
+            <img src="../shajag_logo.png" alt="Shajag Vaidya Manager" class="logo">
+            <h1>Shajag Vaidya Manager</h1>
+            <p class="tagline">Vigilant Care, Traditional Wisdom</p>
+        </div>
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="userRole" class="form-label">Select Role</label>
+                <select id="userRole" class="form-control" required>
+                    <option value="">Choose your role...</option>
+                    <option value="owner">Owner - Full Access</option>
+                    <option value="doctor">Doctor - Clinical + Patient Management</option>
+                    <option value="patient">Patient - Personal Data Only</option>
+                    <option value="nurse">Nurse - Patient Care + Therapy</option>
+                    <option value="pharmacy">Pharmacy Staff - Inventory + Prescriptions</option>
+                    <option value="assistant">Assistant - Appointments + Basic Admin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+        </form>
+        <div class="login-footer">
+            <p>Version 3.0 • 15 Languages Supported • 50,000+ Medicines Database</p>
+        </div>
+    </div>
+</div>
+
+<!-- Main Application -->
+<div id="mainApp" class="main-app hidden" style="display: none;">
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <img src="../shajag_logo.png" alt="SVM" class="header-logo">
+            <h2>Shajag Vaidya Manager</h2>
+        </div>
+        <div class="header-center">
+            <label for="languageSelector" class="sr-only">Select Language</label>
+            <select id="languageSelector" class="form-control header-select">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="sa">संस्कृत</option>
+                <option value="ta">தமிழ்</option>
+                <option value="te">తెలుగు</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+        </div>
+        <div class="header-right">
+            <!-- Simple User Info and Logout -->
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="text-align: right;">
+                    <div style="font-weight: 600; font-size: 14px; color: #1f2937;" id="currentUser">Admin</div>
+                    <div style="font-size: 12px; color: #6b7280;" id="currentRole">Practice Owner</div>
+                </div>
+                <button id="logoutBtn" class="btn btn--outline" style="padding: 8px 16px;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="nav-list" id="navList">
+            <!-- Navigation items will be populated by JavaScript based on role -->
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Dashboard View -->
+        <!-- Dashboard View - UPDATED WITH 6 REAL-TIME STATS -->
+        <div id="dashboardView" class="view active">
+            <div class="view-header">
+                <h2>Dashboard & Analytics</h2>
+                <p>Real-time clinic performance overview</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card stat-card-clickable" id="totalPatientsCard">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3 id="totalPatientsCount">0</h3>
+                        <p>Total Patients</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-clickable" id="todayAppointmentsCard">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <h3 id="todayAppointmentsCount">0</h3>
+                        <p>Today's Appointments</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-clickable" id="pharmacyStockCard">
+                    <div class="stat-icon">💊</div>
+                    <div class="stat-content">
+                        <h3 id="pharmacyStockCount">0</h3>
+                        <p>Medicines in Stock</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-clickable" id="therapySessionsCard">
+                    <div class="stat-icon">🧘</div>
+                    <div class="stat-content">
+                        <h3 id="therapySessionsCount">0</h3>
+                        <p>Therapy Assignments</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-clickable" id="totalStaffCard">
+                    <div class="stat-icon">👨‍⚕️</div>
+                    <div class="stat-content">
+                        <h3 id="dashboardTotalStaffCount">0</h3>
+                        <p>Total Staff</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-clickable" id="totalRevenueCard">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <h3 id="dashboardTotalRevenue">₹0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Appointments Widget -->
+            <!-- Today's Appointments Widget -->
+            <div class="todays-appointments-widget" id="todayAppointmentsSection">
+                <div class="widget-header">
+                    <h3>Today's Appointments</h3>
+                    <button class="btn btn--outline btn--sm" id="viewAllAppointments">View All</button>
+                </div>
+                <div class="appointments-list" id="todayAppointmentsList">
+                    <!-- Appointments will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Constitutional Distribution</h3>
+                    <canvas id="constitutionChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Monthly Patient Flow</h3>
+                    <canvas id="patientFlowChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments View -->
+        <div id="appointmentsView" class="view">
+            <div class="view-header">
+                <h2>🖥️ Appointments Management</h2>
+                <div class="view-header-actions">
+                    <button class="btn btn--outline" id="clearFiltersBtn">Clear Filters</button>
+                    <button class="btn btn--primary" id="newAppointmentBtn">Schedule New Appointment</button>
+                </div>
+            </div>
+
+            <div class="appointments-filters">
+                <div class="filter-group">
+                    <label class="form-label">Filter by Date</label>
+                    <select id="dateFilter" class="form-control">
+                        <option value="today">Today</option>
+                        <option value="tomorrow">Tomorrow</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="all">All Appointments</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="form-label">Filter by Status</label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="all">All Status</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="form-label">Search Patient</label>
+                    <input type="search" id="appointmentSearch" class="form-control" placeholder="Search by name or phone...">
+                </div>
+            </div>
+
+            <!-- 🔥 Appointments Calendar -->
+            <div id="appointmentsCalendar" class="appointments-calendar"></div>
+
+
+            <div class="appointments-timeline" id="appointmentsTimeline">
+                <!-- Appointments will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Patient Management View -->
+        <div id="patientView" class="view">
+            <div class="view-header">
+                <h2>🏥 Patient Management</h2>
+                <button class="btn btn--primary" id="addNewPatientBtn">Add New Patient</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="search" id="patientSearchInput" class="form-control" placeholder="Search patients by name, ID, phone, or email...">
+                <button class="btn btn--primary" id="patientSearchBtn">Search</button>
+            </div>
+
+            <div class="patients-grid" id="patientsGrid">
+                <!-- Patients will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Pharmacy Management View -->
+        <div id="pharmacyView" class="view">
+            <div class="view-header">
+                <h2>💊 Pharmacy Management</h2>
+                <button class="btn btn--primary" id="addNewMedicineBtn">Add New Medicine</button>
+            </div>
+
+            <div class="prescription-tools">
+                <div class="medicine-search">
+                    <input type="search" id="pharmacyMedicineSearchInput" class="form-control" placeholder="Search from 50,000+ Ayurvedic medicines...">
+                    <div class="search-filters">
+                        <select class="form-control" id="medicineCategoryFilter">
+                            <option>All Categories</option>
+                            <option>Classical Formulations</option>
+                            <option>Single Herbs</option>
+                            <option>Proprietary Medicines</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="medicineSearchResults" style="margin-top: 20px;">
+                <!-- Medicine search results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Prescription Management View -->
+        <div id="prescriptionManagementView" class="view">
+            <div class="view-header">
+                <h2>📝 Prescription Management</h2>
+                <p>Create and manage patient prescriptions</p>
+            </div>
+
+            <div class="prescription-workflow">
+                <!-- Patient Selection Panel -->
+                <div class="patient-selection-panel">
+                    <h3>Select Patient</h3>
+                    <div class="patient-search-box">
+                        <input type="search" id="prescriptionPatientSearch" placeholder="Search patients..." />
+                    </div>
+                    <div class="patient-list" id="prescriptionPatientList">
+                        <!-- Patients will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Prescription Builder Panel -->
+                <div class="prescription-builder-panel disabled" id="prescriptionBuilderPanel">
+                    <!-- Patient Info Header -->
+                    <div class="prescription-patient-header" id="prescriptionPatientHeader" style="display: none;">
+                        <h3 id="prescriptionPatientName"></h3>
+                        <div class="prescription-patient-details" id="prescriptionPatientDetails"></div>
+                    </div>
+
+                    <!-- Medicine Selection Tabs -->
+                    <div class="medicine-selection-tabs">
+                        <button class="medicine-tab active" data-tab="pharmacy">From Our Pharmacy</button>
+                        <button class="medicine-tab" data-tab="external">External Medicine</button>
+                    </div>
+
+                    <!-- Medicine Selection Area -->
+                    <div class="medicine-selection-area">
+                        <!-- Pharmacy Medicines Tab -->
+                        <div class="tab-content active" id="pharmacyTab">
+                            <div class="pharmacy-medicine-search">
+                                <input type="search" id="pharmacyMedicineSearch" placeholder="Search medicines in pharmacy..." />
+                            </div>
+                            <div class="available-medicines-grid" id="availableMedicinesGrid">
+                                <!-- Medicines will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- External Medicines Tab -->
+                        <div class="tab-content" id="externalTab">
+                            <div class="external-medicine-form">
+                                <h4>Add External Medicine</h4>
+                                <form id="externalMedicineForm">
+                                    <div class="form-group">
+                                        <label class="form-label">Medicine Name *</label>
+                                        <input type="text" id="externalMedicineName" class="form-control" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Company</label>
+                                        <input type="text" id="externalMedicineCompany" class="form-control" placeholder="e.g., Himalaya, Baidyanath" />
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Dosage *</label>
+                                            <input type="text" id="externalMedicineDosage" class="form-control" placeholder="e.g., 2 tablets" required />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Timing *</label>
+                                            <input type="text" id="externalMedicineTiming" class="form-control" placeholder="e.g., After meals" required />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Duration</label>
+                                        <input type="text" id="externalMedicineDuration" class="form-control" placeholder="e.g., 30 days" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Notes</label>
+                                        <textarea id="externalMedicineNotes" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn--primary">Add to Prescription</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Prescription Section -->
+                    <div class="current-prescription-section">
+                        <h4>
+                            Current Prescription
+                            <span class="prescription-count-badge" id="prescriptionCountBadge">0</span>
+                        </h4>
+                        <div class="prescription-medicine-list" id="prescriptionMedicineList">
+                            <div class="prescription-empty-state">
+                                <div class="prescription-empty-state-icon">💊</div>
+                                <h4>No medicines added yet</h4>
+                                <p>Select medicines from pharmacy or add external medicines</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prescription Notes -->
+                    <div class="prescription-notes-section">
+                        <label>Additional Notes / Instructions</label>
+                        <textarea id="prescriptionNotes" placeholder="Add any special instructions for the patient..."></textarea>
+                    </div>
+
+                    <!-- Prescription Actions -->
+                    <div class="prescription-actions">
+                        <button class="btn btn--outline" id="cancelPrescriptionBtn">Cancel</button>
+                        <button class="btn btn--primary" id="savePrescriptionBtn">Save & Generate Prescription</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Prescriptions Section -->
+            <div class="recent-prescriptions-section">
+                <h3>Recent Prescriptions</h3>
+                <div class="prescriptions-history-grid" id="prescriptionsHistoryGrid">
+                    <!-- Recent prescriptions will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Therapy View -->
+        <div id="therapyView" class="view">
+            <div class="view-header">
+                <h2>🧘🏻 Panchakarma Therapy Management</h2>
+                <button class="btn btn--primary" id="scheduleTherapyBtn">Schedule Therapy</button>
+            </div>
+
+            <div class="therapy-workflow">
+                <!-- Patient Selection Panel -->
+                <div class="therapy-patient-selection-panel">
+                    <h3>Select Patient</h3>
+                    <div class="therapy-patient-search-box">
+                        <input type="search" id="therapyPatientSearch" placeholder="Search patients..." class="form-control" />
+                    </div>
+                    <div class="therapy-patient-list" id="therapyPatientList">
+                        <!-- Patients will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Therapy Builder Panel -->
+                <div class="therapy-builder-panel disabled" id="therapyBuilderPanel">
+                    <!-- Patient Info Header -->
+                    <div class="therapy-patient-header" id="therapyPatientHeader" style="display: none;">
+                        <h3 id="therapyPatientName"></h3>
+                        <div class="therapy-patient-details" id="therapyPatientDetails"></div>
+                    </div>
+
+                    <!-- Therapy Types Selection -->
+                    <div class="therapy-types-section">
+                        <h4>Select Therapies</h4>
+                        <div class="therapy-types">
+                            <div class="therapy-card">
+                                <h3>🌿 Vamana</h3>
+                                <p>Therapeutic vomiting for Kapha disorders</p>
+                                <div class="therapy-stats">
+                                    <span>12 sessions this month</span>
+                                </div>
+                            </div>
+                            <div class="therapy-card">
+                                <h3>💧 Virechana</h3>
+                                <p>Purgation therapy for Pitta disorders</p>
+                                <div class="therapy-stats">
+                                    <span>18 sessions this month</span>
+                                </div>
+                            </div>
+                            <div class="therapy-card">
+                                <h3>🌊 Basti</h3>
+                                <p>Medicated enema for Vata disorders</p>
+                                <div class="therapy-stats">
+                                    <span>25 sessions this month</span>
+                                </div>
+                            </div>
+                            <div class="therapy-card">
+                                <h3>👃 Nasya</h3>
+                                <p>Nasal administration of medicines</p>
+                                <div class="therapy-stats">
+                                    <span>15 sessions this month</span>
+                                </div>
+                            </div>
+                            <div class="therapy-card">
+                                <h3>🩸 Raktamokshana</h3>
+                                <p>Bloodletting therapy</p>
+                                <div class="therapy-stats">
+                                    <span>8 sessions this month</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Therapies Section -->
+                    <div class="selected-therapies-section">
+                        <h4>
+                            Selected Therapies
+                            <span class="therapy-count-badge" id="therapyCountBadge">0</span>
+                        </h4>
+                        <div class="selected-therapies-list" id="selectedTherapiesList">
+                            <div class="therapy-empty-state">
+                                <div class="therapy-empty-state-icon">🧘</div>
+                                <h4>No therapies selected</h4>
+                                <p>Click on therapy cards above to select</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Therapy Notes -->
+                    <div class="therapy-notes-section">
+                        <label>Additional Notes / Instructions</label>
+                        <textarea id="therapyNotes" placeholder="Add special instructions, precautions, or diet recommendations..."></textarea>
+                    </div>
+
+                    <!-- Therapy Actions -->
+                    <div class="therapy-actions">
+                        <button class="btn btn--outline" id="cancelTherapyAssignmentBtn">Cancel</button>
+                        <button class="btn btn--primary" id="saveTherapyAssignmentBtn">Save Therapy Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Therapy Assignments -->
+            <div class="recent-therapy-assignments-section">
+                <h3>Recent Therapy Assignments</h3>
+                <div class="therapy-assignments-history" id="therapyAssignmentsHistory">
+                    <!-- Therapy assignments will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Diet Management View -->
+        <div id="dietView" class="view">
+            <div class="view-header">
+                <h2>🥗 Diet Management</h2>
+                <button class="btn btn--primary" id="createDietPlanBtn">Create Diet Plan</button>
+            </div>
+
+            <div class="diet-workflow">
+                <!-- Patient Selection Panel -->
+                <div class="diet-patient-selection-panel">
+                    <h3>Select Patient</h3>
+                    <div class="diet-patient-search-box">
+                        <input type="search" id="dietPatientSearch" placeholder="Search patients..." class="form-control" />
+                    </div>
+                    <div class="diet-patient-list" id="dietPatientList">
+                        <!-- Patients will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Diet Builder Panel -->
+                <div class="diet-builder-panel disabled" id="dietBuilderPanel">
+                    <!-- Patient Info Header -->
+                    <div class="diet-patient-header" id="dietPatientHeader" style="display: none;">
+                        <h3 id="dietPatientName"></h3>
+                        <div class="diet-patient-details" id="dietPatientDetails"></div>
+                    </div>
+
+                    <div class="diet-tools">
+                        <div class="constitution-selector">
+                            <h3>Select Constitution</h3>
+                            <div class="constitution-options">
+                                <button class="constitution-btn" data-constitution="vata">Vata</button>
+                                <button class="constitution-btn" data-constitution="pitta">Pitta</button>
+                                <button class="constitution-btn" data-constitution="kapha">Kapha</button>
+                            </div>
+                        </div>
+
+                        <div class="seasonal-selector">
+                            <h3>Ritucharya (Seasonal Adjustment)</h3>
+                            <select class="form-control">
+                                <option>Spring (Vasant)</option>
+                                <option>Summer (Grishma)</option>
+                                <option>Monsoon (Varsha)</option>
+                                <option>Autumn (Sharad)</option>
+                                <option>Winter (Shishir)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="diet-preview" id="dietPreview">
+                        <div class="diet-empty-state">
+                            <div class="diet-empty-state-icon">🥗</div>
+                            <h4>No constitution selected</h4>
+                            <p>Select a constitution to view diet recommendations</p>
+                        </div>
+                    </div>
+
+                    <!-- Diet Notes -->
+                    <div class="diet-notes-section">
+                        <label>Additional Notes / Instructions</label>
+                        <textarea id="dietNotes" placeholder="Add special dietary instructions or restrictions..."></textarea>
+                    </div>
+
+                    <!-- Diet Actions -->
+                    <div class="diet-actions">
+                        <button class="btn btn--outline" id="cancelDietPlanBtn">Cancel</button>
+                        <button class="btn btn--primary" id="saveDietPlanBtn">Save Diet Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Diet Plans -->
+            <div class="recent-diet-plans-section">
+                <h3>Recent Diet Plans</h3>
+                <div class="diet-plans-history" id="dietPlansHistory">
+                    <!-- Diet plans will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports View -->
+        <div id="reportsView" class="view">
+            <div class="view-header">
+                <h2>📈 Reports & Analytics</h2>
+                <button class="btn btn--primary">Generate Report</button>
+            </div>
+
+            <div class="report-categories">
+                <div class="report-card">
+                    <h3>📊 Performance Reports</h3>
+                    <p>Clinic performance and revenue analysis</p>
+                    <button class="btn btn--outline">Generate</button>
+                </div>
+                <div class="report-card">
+                    <h3>👥 Patient Demographics</h3>
+                    <p>Age, constitution, and treatment analysis</p>
+                    <button class="btn btn--outline">Generate</button>
+                </div>
+                <div class="report-card">
+                    <h3>💊 Treatment Outcomes</h3>
+                    <p>Success rates and improvement tracking</p>
+                    <button class="btn btn--outline">Generate</button>
+                </div>
+                <div class="report-card">
+                    <h3>📋 Regulatory Compliance</h3>
+                    <p>Healthcare standard compliance reports</p>
+                    <button class="btn btn--outline">Generate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Communication Center View -->
+        <div id="communicationView" class="view">
+            <!-- Overview Section -->
+            <div id="communicationOverview" class="communication-overview">
+                <div class="view-header">
+                    <h2>📧 Communication Center</h2>
+                    <button class="btn btn--primary" id="composeMessageBtn">Compose Message</button>
+                </div>
+
+                <!-- Message Statistics -->
+                <div class="communication-stats-grid">
+                    <div class="communication-stat-card">
+                        <div class="communication-stat-icon">📧</div>
+                        <div class="communication-stat-content">
+                            <h3 id="totalMessagesCount">0</h3>
+                            <p>Total Messages</p>
+                        </div>
+                    </div>
+                    <div class="communication-stat-card">
+                        <div class="communication-stat-icon">📅</div>
+                        <div class="communication-stat-content">
+                            <h3 id="todayMessagesCount">0</h3>
+                            <p>Today's Messages</p>
+                        </div>
+                    </div>
+                    <div class="communication-stat-card">
+                        <div class="communication-stat-icon">📊</div>
+                        <div class="communication-stat-content">
+                            <h3 id="thisMonthMessagesCount">0</h3>
+                            <p>This Month</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Templates Section -->
+                <div class="message-templates-section">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                        <h2>Message Templates</h2>
+                        <input type="search" id="templateSearchInput" class="form-control"
+                               placeholder="Search templates..." style="max-width: 300px;">
+                    </div>
+                    <div class="message-templates-grid" id="messageTemplatesContainer">
+                        <!-- Templates will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recent Messages Section -->
+                <div class="recent-messages-section">
+                    <h2>Recent Messages</h2>
+                    <div id="recentMessagesContainer">
+                        <!-- Recent messages will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detail View Section (Hidden by default) -->
+            <div id="communicationDetail" class="communication-detail">
+                <div id="detailViewHeader" class="detail-header">
+                    <!-- Dynamic header content -->
+                </div>
+
+                <div class="detail-actions">
+                    <button class="btn btn--outline" id="backToOverviewBtn">← Back to Overview</button>
+                    <button class="btn btn--primary" id="sendToAllBtn">Send to All</button>
+                </div>
+
+                <div class="patient-messages-list">
+                    <div id="templatePatientsList">
+                        <!-- Patient list will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Management View -->
+        <div id="staffManagementView" class="view">
+            <div class="staff-overview">
+                <div class="view-header">
+                    <h2>💼 Staff Management</h2>
+                    <div class="view-header-actions">
+                        <button class="btn btn--outline" onclick="window.app.staffHandlers.exportStaffData()">
+                            Export Data
+                        </button>
+                        <button class="btn btn--primary" id="addStaffBtn">Add Staff Member</button>
+                    </div>
+                </div>
+
+                <!-- Statistics Grid -->
+                <div class="staff-stats-grid">
+                    <div class="staff-stat-card">
+                        <div class="staff-stat-icon">👥</div>
+                        <div class="staff-stat-content">
+                            <h3 id="totalStaffCount">0</h3>
+                            <p>Total Staff</p>
+                        </div>
+                    </div>
+                    <div class="staff-stat-card">
+                        <div class="staff-stat-icon">✅</div>
+                        <div class="staff-stat-content">
+                            <h3 id="activeStaffCount">0</h3>
+                            <p>Active Staff</p>
+                        </div>
+                    </div>
+                    <div class="staff-stat-card">
+                        <div class="staff-stat-icon">👨‍⚕️</div>
+                        <div class="staff-stat-content">
+                            <h3 id="doctorsCount">0</h3>
+                            <p>Doctors</p>
+                        </div>
+                    </div>
+                    <div class="staff-stat-card">
+                        <div class="staff-stat-icon">💰</div>
+                        <div class="staff-stat-content">
+                            <h3 id="totalSalaryCount">₹0</h3>
+                            <p>Total Salary</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="staff-filters">
+                    <div class="filter-group">
+                        <label class="form-label">Search Staff</label>
+                        <input type="search" id="staffSearchInput" class="form-control"
+                               placeholder="Search by name, ID, role, email, or contact...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Filter by Role</label>
+                        <select id="staffRoleFilter" class="form-control">
+                            <option value="all">All Roles</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Filter by Status</label>
+                        <select id="staffStatusFilter" class="form-control">
+                            <option value="all">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="On Leave">On Leave</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Staff Grid -->
+                <div class="staff-grid" id="staffGridContainer">
+                    <!-- Staff cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing View -->
+        <div id="billingView" class="view">
+            <div class="billing-overview">
+                <div class="view-header">
+                    <h2>💰 Billing & Invoices</h2>
+                    <div class="view-header-actions">
+                        <button class="btn btn--outline" onclick="window.app.billingHandlers.exportBillingData()">
+                            Export Data
+                        </button>
+                        <button class="btn btn--primary" id="createInvoiceBtn">Create Invoice</button>
+                    </div>
+                </div>
+
+                <!-- Statistics Grid -->
+                <div class="billing-stats-grid">
+                    <div class="billing-stat-card">
+                        <div class="billing-stat-icon">📄</div>
+                        <div class="billing-stat-content">
+                            <h3 id="totalInvoicesCount">0</h3>
+                            <p>Total Invoices</p>
+                        </div>
+                    </div>
+                    <div class="billing-stat-card">
+                        <div class="billing-stat-icon">💵</div>
+                        <div class="billing-stat-content">
+                            <h3 id="totalRevenueCount">₹0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                    <div class="billing-stat-card">
+                        <div class="billing-stat-icon">⏳</div>
+                        <div class="billing-stat-content">
+                            <h3 id="pendingPaymentsCount">₹0</h3>
+                            <p>Pending Payments</p>
+                        </div>
+                    </div>
+                    <div class="billing-stat-card">
+                        <div class="billing-stat-icon">📊</div>
+                        <div class="billing-stat-content">
+                            <h3 id="monthRevenueCount">₹0</h3>
+                            <p>This Month</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="billing-filters">
+                    <div class="filter-group">
+                        <label class="form-label">Search Invoices</label>
+                        <input type="search" id="invoiceSearchInput" class="form-control"
+                               placeholder="Search by invoice number, patient name, or phone...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Filter by Status</label>
+                        <select id="invoiceStatusFilter" class="form-control">
+                            <option value="all">All Status</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Partial">Partial</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="form-label">Payment Method</label>
+                        <select id="invoicePaymentFilter" class="form-control">
+                            <option value="all">All Methods</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Net Banking">Net Banking</option>
+                            <option value="Insurance">Insurance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Invoices Table -->
+                <div class="invoices-grid" id="invoicesGridContainer">
+                    <!-- Invoice table will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Appointment Scheduling Modal -->
+    <div id="appointmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Schedule New Appointment</h2>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="appointmentForm" class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="patientName" class="form-label">Patient Name *</label>
+                        <input type="text" id="patientName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientPhone" class="form-label">Phone Number *</label>
+                        <input type="tel" id="patientPhone" class="form-control" placeholder="+91-XXXXXXXXXX" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="appointmentDate" class="form-label">Appointment Date *</label>
+                        <input type="date" id="appointmentDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentTime" class="form-label">Appointment Time *</label>
+                        <input type="time" id="appointmentTime" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="appointmentType" class="form-label">Appointment Type *</label>
+                        <select id="appointmentType" class="form-control" required>
+                            <option value="">Select type...</option>
+                            <option value="1">Consultation</option>
+                            <option value="2">Follow-up</option>
+                            <option value="3">Emergency</option>
+                            <option value="4">Therapy Session</option>
+                            <option value="1002">General Consultation</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="constitution" class="form-label">Constitution Type</label>
+                        <select id="constitution" class="form-control">
+                            <option value="">Select constitution...</option>
+                            <option value="Vata">Vata</option>
+                            <option value="Pitta">Pitta</option>
+                            <option value="Kapha">Kapha</option>
+                            <option value="Vata-Pitta">Vata-Pitta</option>
+                            <option value="Pitta-Kapha">Pitta-Kapha</option>
+                            <option value="Vata-Kapha">Vata-Kapha</option>
+                            <option value="Tridosha">Tridosha</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="appointmentNotes" class="form-label">Notes</label>
+                    <textarea id="appointmentNotes" class="form-control" rows="3" placeholder="Additional notes or special requirements..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" id="cancelModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Schedule Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Medicine Dosage Modal -->
+    <div id="medicineDosageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Medicine to Prescription</h2>
+                <button class="modal-close" id="closeDosageModalBtn">&times;</button>
+            </div>
+            <form id="dosageForm" class="modal-body">
+                <input type="hidden" id="selectedMedicineId" />
+
+                <div class="form-group">
+                    <label class="form-label">Medicine</label>
+                    <p id="selectedMedicineName" style="font-weight: 600; color: var(--color-text);"></p>
+                </div>
+
+                <div class="dosage-form-grid">
+                    <div class="form-group">
+                        <label for="customDosage" class="form-label">Dosage *</label>
+                        <input type="text" id="customDosage" class="form-control" placeholder="e.g., 3-6g or 2 tablets" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customTiming" class="form-label">Timing *</label>
+                        <select id="customTiming" class="form-control" required>
+                            <option value="">Select timing...</option>
+                            <option value="Before meals">Before meals</option>
+                            <option value="After meals">After meals</option>
+                            <option value="Morning empty stomach">Morning empty stomach</option>
+                            <option value="Night before bed">Night before bed</option>
+                            <option value="With warm milk">With warm milk</option>
+                            <option value="With water">With water</option>
+                            <option value="Twice daily">Twice daily</option>
+                            <option value="Thrice daily">Thrice daily</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="medicineDuration" class="form-label">Duration *</label>
+                        <input type="text" id="medicineDuration" class="form-control" placeholder="e.g., 30 days, 1 month" required />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" id="cancelDosageModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Add to Prescription</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Therapy Schedule Modal -->
+    <div id="therapyScheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Schedule Therapy Session</h2>
+                <button class="modal-close" id="closeTherapyScheduleModalBtn">&times;</button>
+            </div>
+            <form id="therapyScheduleForm" class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="schedulePatientName" class="form-label">Patient Name *</label>
+                        <input type="text" id="schedulePatientName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="schedulePatientPhone" class="form-label">Phone Number *</label>
+                        <input type="tel" id="schedulePatientPhone" class="form-control" placeholder="+91-XXXXXXXXXX" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="therapyType" class="form-label">Therapy Type *</label>
+                    <select id="therapyType" class="form-control" required>
+                        <option value="">Select therapy...</option>
+                        <option value="Vamana">Vamana - Therapeutic Vomiting</option>
+                        <option value="Virechana">Virechana - Purgation Therapy</option>
+                        <option value="Basti">Basti - Medicated Enema</option>
+                        <option value="Nasya">Nasya - Nasal Administration</option>
+                        <option value="Raktamokshana">Raktamokshana - Bloodletting</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sessionDate" class="form-label">Session Date *</label>
+                        <input type="date" id="sessionDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionTime" class="form-label">Session Time *</label>
+                        <input type="time" id="sessionTime" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sessionDuration" class="form-label">Session Duration *</label>
+                    <select id="sessionDuration" class="form-control" required>
+                        <option value="">Select duration...</option>
+                        <option value="30 minutes">30 minutes</option>
+                        <option value="1 hour">1 hour</option>
+                        <option value="1.5 hours">1.5 hours</option>
+                        <option value="2 hours">2 hours</option>
+                        <option value="3 hours">3 hours</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleNotes" class="form-label">Notes</label>
+                    <textarea id="scheduleNotes" class="form-control" rows="3" placeholder="Additional instructions or preparations needed..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" id="cancelTherapyScheduleModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Schedule Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Compose Message Modal -->
+    <div id="composeMessageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Compose Message</h2>
+                <button class="modal-close" id="closeComposeModalBtn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Message Type Tabs -->
+                <div class="message-type-tabs">
+                    <button class="message-type-tab active" data-type="individual">Individual Message</button>
+                    <button class="message-type-tab" data-type="group">Group Message</button>
+                </div>
+
+                <form id="composeMessageForm">
+                    <!-- Individual Message Section -->
+                    <div id="individualMessageSection" class="compose-section active">
+                        <div class="form-group">
+                            <label class="form-label">Select Patient *</label>
+                            <select id="individualPatientSelect" class="form-control" required>
+                                <option value="">Select a patient...</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Group Message Section -->
+                    <div id="groupMessageSection" class="compose-section">
+                        <div class="select-all-patients">
+                            <input type="checkbox" id="patientSelectAll">
+                            <label for="patientSelectAll">Select All Patients</label>
+                        </div>
+
+                        <div class="compose-patients-selection" id="composePatientsSelectionList">
+                            <!-- Patient checkboxes will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Common Fields -->
+                    <div class="form-group">
+                        <label class="form-label">Message Template *</label>
+                        <select id="composeTemplateSelect" class="form-control" required>
+                            <option value="">Select a template...</option>
+                            <option value="appointment_reminder">Appointment Reminder</option>
+                            <option value="follow_up_reminder">Follow-up Reminder</option>
+                            <option value="treatment_completion">Treatment Completion</option>
+                            <option value="therapy_reminder">Therapy Session Reminder</option>
+                            <option value="prescription_ready">Prescription Ready</option>
+                            <option value="diet_plan_update">Diet Plan Update</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Custom Message (Optional)</label>
+                        <textarea id="composeCustomMessage" class="form-control" rows="4"
+                                  placeholder="Add a personalized message or leave blank to use template default..."></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn--outline" id="cancelComposeBtn">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <!-- Add Staff Modal -->
+    <div id="addStaffModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Staff Member</h2>
+                <button class="modal-close" id="closeAddStaffModalBtn">&times;</button>
+            </div>
+
+            <form id="addStaffForm" class="modal-body">
+
+                <!-- Wizard Steps -->
+                <div class="wizard-steps">
+                    <div class="wizard-step active" data-step="1">Basic</div>
+                    <div class="wizard-step" data-step="2">Professional</div>
+                    <div class="wizard-step" data-step="3">Employment</div>
+                </div>
+
+                <!-- STEP 1: BASIC INFORMATION -->
+                <div class="wizard-panel active" data-step="1">
+                    <h3 class="wizard-title">Basic Information</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" id="staffName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Age *</label>
+                            <input type="number" id="staffAge" class="form-control" required min="18" max="70">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email *</label>
+                            <input type="email" id="staffEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Number *</label>
+                            <input type="tel" id="staffContact" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Emergency Contact</label>
+                        <input type="tel" id="staffEmergencyContact" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea id="staffAddress" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="wizard-actions">
+                        <button type="button" class="btn btn--primary" onclick="goWizardStep(2)">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: PROFESSIONAL DETAILS -->
+                <div class="wizard-panel" data-step="2">
+                    <h3 class="wizard-title">Professional Details</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Role *</label>
+                            <input type="text" id="staffRole" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Qualification *</label>
+                            <input type="text" id="staffQualification" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Responsibility *</label>
+                        <textarea id="staffResponsibility" class="form-control" rows="2" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Experience</label>
+                            <input type="text" id="staffExperience" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Specialization</label>
+                            <input type="text" id="staffSpecialization" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="wizard-actions">
+                        <button type="button" class="btn btn--outline" onclick="goWizardStep(1)">
+                            ← Back
+                        </button>
+                        <button type="button" class="btn btn--primary" onclick="goWizardStep(3)">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: EMPLOYMENT DETAILS -->
+                <div class="wizard-panel" data-step="3">
+                    <h3 class="wizard-title">Employment Details</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Joining Date *</label>
+                            <input type="date" id="staffJoiningDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Employment Type *</label>
+                            <select id="staffEmploymentType" class="form-control" required>
+                                <option value="">Select</option>
+                                <option value="Full-time">Full-time</option>
+                                <option value="Part-time">Part-time</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Intern">Intern</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Monthly Salary (₹) *</label>
+                            <input type="number" id="staffSalary" class="form-control" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Shift</label>
+                            <input type="text" id="staffShift" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="wizard-actions">
+                        <button type="button" class="btn btn--outline" onclick="goWizardStep(2)">
+                            ← Back
+                        </button>
+                        <button type="submit" class="btn btn--primary">
+                            Add Staff Member
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Edit Staff Modal -->
+    <div id="editStaffModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Staff Member</h2>
+                <button class="modal-close" id="closeEditStaffModalBtn">&times;</button>
+            </div>
+            <form id="editStaffForm" class="modal-body">
+                <input type="hidden" id="editStaffId">
+
+                <h3 style="margin-top: 0; color: #21808D; font-size: 16px;">Basic Information</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" id="editStaffName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Age *</label>
+                        <input type="number" id="editStaffAge" class="form-control" required
+                               min="18" max="70">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" id="editStaffEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Number *</label>
+                        <input type="tel" id="editStaffContact" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Emergency Contact</label>
+                    <input type="tel" id="editStaffEmergencyContact" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <textarea id="editStaffAddress" class="form-control" rows="2"></textarea>
+                </div>
+
+                <h3 style="margin-top: 24px; color: #21808D; font-size: 16px;">Professional Details</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Role *</label>
+                        <input type="text" id="editStaffRole" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Qualification *</label>
+                        <input type="text" id="editStaffQualification" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Responsibility *</label>
+                    <textarea id="editStaffResponsibility" class="form-control" rows="2" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Experience</label>
+                        <input type="text" id="editStaffExperience" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Specialization</label>
+                        <input type="text" id="editStaffSpecialization" class="form-control">
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 24px; color: #21808D; font-size: 16px;">Employment Details</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Joining Date *</label>
+                        <input type="date" id="editStaffJoiningDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Employment Type *</label>
+                        <select id="editStaffEmploymentType" class="form-control" required>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Intern">Intern</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Monthly Salary (₹) *</label>
+                        <input type="number" id="editStaffSalary" class="form-control" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Shift</label>
+                        <input type="text" id="editStaffShift" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Status *</label>
+                    <select id="editStaffStatus" class="form-control" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="On Leave">On Leave</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" id="cancelEditStaffBtn">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Update Staff Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- More Info Modal -->
+    <div id="moreInfoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Staff Details</h2>
+                <button class="modal-close" id="closeMoreInfoModalBtn">&times;</button>
+            </div>
+            <div id="moreInfoContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Invoice Modal -->
+    <div id="createInvoiceModal" class="modal">
+        <div class="modal-content" style="max-width: 1200px;">
+            <div class="modal-header">
+                <h2>Create New Invoice</h2>
+                <button class="modal-close" onclick="window.app.billingHandlers.closeCreateInvoiceModal()">&times;</button>
+            </div>
+
+            <form class="modal-body" onsubmit="window.app.billingHandlers.generateInvoice(event)">
+                <!-- Patient Information -->
+                <h3 style="margin-top: 0; color: #21808D; font-size: 16px;">Patient Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Patient Name *</label>
+                        <input type="text" id="invoicePatientName" class="form-control" required
+                               placeholder="e.g., Rajesh Kumar">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="tel" id="invoicePatientPhone" class="form-control" required
+                               placeholder="e.g., +91-9876543210">
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 24px; color: #21808D; font-size: 16px;">Services & Items</h3>
+
+                <div class="create-invoice-container">
+                    <!-- Services Selection -->
+                    <div class="services-selection-panel">
+                        <div id="servicesSelectionGrid">
+                            <!-- Services will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Invoice Preview -->
+                    <div class="invoice-preview-panel">
+                        <h3>Invoice Preview</h3>
+                        <div id="invoicePreview">
+                            <!-- Preview will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 24px; color: #21808D; font-size: 16px;">Payment Details</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Payment Method *</label>
+                        <select id="invoicePaymentMethod" class="form-control" required>
+                            <option value="">Select method...</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Net Banking">Net Banking</option>
+                            <option value="Insurance">Insurance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment Status *</label>
+                        <select id="invoicePaymentStatus" class="form-control" required>
+                            <option value="Paid">Paid</option>
+                            <option value="Partial">Partial Payment</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Amount Paid *</label>
+                    <input type="number" id="invoiceAmountPaid" class="form-control" required
+                           min="0" placeholder="Enter amount paid">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea id="invoiceNotes" class="form-control" rows="2"
+                              placeholder="Additional notes or payment terms..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" onclick="window.app.billingHandlers.closeCreateInvoiceModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn--primary">Generate Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invoice Details Modal -->
+    <div id="invoiceDetailsModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Invoice Details</h2>
+                <button class="modal-close" onclick="window.app.billingHandlers.closeInvoiceDetailsModal()">&times;</button>
+            </div>
+
+            <div id="invoiceDetailsContent">
+                <!-- Invoice details will be populated by JavaScript -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn--outline" onclick="window.app.billingHandlers.closeInvoiceDetailsModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Load JavaScript files in correct order -->
+<!-- Data Management Classes -->
+<script src="../js/classes/PatientManagement.js"></script>
+<script src="../js/classes/AppointmentsManager.js"></script>
+<script src="../js/classes/MedicineDatabase.js"></script>
+<script src="../js/classes/PrescriptionManager.js"></script>
+<script src="../js/classes/TherapyManager.js"></script>
+<script src="../js/classes/DietManager.js"></script>
+<script src="../js/classes/CommunicationManager.js"></script>
+<script src="../js/classes/StaffManagement.js"></script>
+<script src="../js/classes/BillingManager.js"></script>
+
+<!-- Main Manager -->
+<script src="../js/classes/ShajagVaidyaManager.js"></script>
+
+<!-- Add this line: -->
+<script src="../js/api.js"></script>
+
+<!-- Handler Classes -->
+<script src="../js/handlers/AppointmentHandlers.js"></script>
+<script src="../js/handlers/PatientHandlers.js"></script>
+<script src="../js/handlers/PharmacyHandlers.js"></script>
+<script src="../js/handlers/PrescriptionManagementHandlers.js"></script>
+<script src="../js/handlers/ChartHandlers.js"></script>
+<script src="../js/handlers/DietHandlers.js"></script>
+<script src="../js/handlers/TherapyHandlers.js"></script>
+<script src="../js/handlers/CommunicationHandlers.js"></script>
+<script src="../js/handlers/StaffManagementHandlers.js"></script>
+
+<script src="../js/utils/InvoiceRenderer.js"></script>
+<script src="../js/utils/AppointmentCalendar.js"></script>
+
+<script src="../js/handlers/BillingHandlers.js"></script>
+<script src="../js/handlers/Dashboardhandlers.js"></script>
+
+<!-- App Initialization -->
+<script src="../js/app.js"></script>
+</body>
+</html>

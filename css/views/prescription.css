@@ -1,0 +1,105 @@
+/* Pharmacy Management - Medicine Visibility Fix */
+/* Make medicine names and details clearly visible */
+
+/* Medicine Cards Container */
+#medicineList,
+#pharmacyMedicinesList,
+.medicines-list,
+.pharmacy-medicines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+}
+
+/* Individual Medicine Card/Item */
+#medicineList > div,
+#pharmacyMedicinesList > div,
+.medicine-card,
+.medicine-item,
+.medicine-list-item {
+    background: var(--color-surface) !important;
+    border: 1px solid var(--color-card-border) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: var(--space-16) !important;
+    position: relative;
+}
+
+/* MEDICINE NAME - Make it bright white and large */
+#medicineList > div > h3,
+#pharmacyMedicinesList > div > h3,
+.medicine-card > h3,
+.medicine-item > h3,
+.medicine-card h3:first-child,
+.medicine-item h3:first-child {
+    color: #FFFFFF !important;
+    font-size: var(--font-size-xl) !important;
+    font-weight: var(--font-weight-bold) !important;
+    margin-bottom: var(--space-8) !important;
+    opacity: 1 !important;
+    line-height: var(--line-height-tight) !important;
+}
+
+/* Dark mode specific - ensure visibility */
+@media (prefers-color-scheme: dark) {
+    #medicineList > div > h3,
+    #pharmacyMedicinesList > div > h3,
+    .medicine-card > h3,
+    .medicine-item > h3 {
+        color: #FFFFFF !important;
+    }
+}
+
+/* Sanskrit name and category (secondary line) */
+#medicineList > div > div:first-of-type,
+#pharmacyMedicinesList > div > div:first-of-type,
+.medicine-sanskrit,
+.medicine-category-line {
+    color: #B0B0B0 !important;
+    font-size: var(--font-size-sm) !important;
+    margin-bottom: var(--space-8) !important;
+    opacity: 1 !important;
+}
+
+/* All other text in medicine cards (dosage, stock, price, etc.) */
+#medicineList > div > div,
+#pharmacyMedicinesList > div > div,
+.medicine-card > div,
+.medicine-item > div,
+.medicine-details {
+    color: #C0C0C0 !important;
+    font-size: var(--font-size-sm) !important;
+    line-height: 1.6 !important;
+    opacity: 1 !important;
+}
+
+/* Force all text to be visible */
+#medicineList > div *,
+#pharmacyMedicinesList > div *,
+.medicine-card *,
+.medicine-item * {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Stock badges - keep their colors */
+.stock-badge,
+.status--success,
+.status--error {
+    opacity: 1 !important;
+}
+
+/* Hover effect for medicine cards */
+#medicineList > div:hover h3,
+#pharmacyMedicinesList > div:hover h3,
+.medicine-card:hover h3,
+.medicine-item:hover h3 {
+    color: var(--color-primary) !important;
+}
+
+#medicineList > div:hover,
+#pharmacyMedicinesList > div:hover,
+.medicine-card:hover,
+.medicine-item:hover {
+    background: var(--color-secondary) !important;
+    border-color: var(--color-primary) !important;
+}

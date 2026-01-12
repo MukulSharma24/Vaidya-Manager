@@ -1,0 +1,211 @@
+/* Patient Management View Styles */
+
+/* Patients Grid - Multi-column layout */
+.patients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Patient Card - Compact card design */
+.patient-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.patient-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: #2E8B57;
+}
+
+/* Patient Avatar - UPDATED FOR EMOJIS */
+.patient-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    /* Transparent background to show emoji clearly */
+    background: transparent;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Large font size for Emoji */
+    font-size: 48px;
+    margin: 0 auto;
+    box-shadow: none;
+}
+
+/* Patient Info */
+.patient-info {
+    text-align: center;
+}
+
+.patient-info h4 {
+    margin: 0 0 8px 0;
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.patient-info p {
+    margin: 0 0 4px 0;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.patient-info p:last-child {
+    margin-bottom: 0;
+}
+
+/* Patient Actions */
+.patient-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding-top: 8px;
+    border-top: 1px solid #f3f4f6;
+}
+
+.patient-actions .btn {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Edit Button Style (Blue) */
+.btn--edit {
+    background: white;
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+}
+.btn--edit:hover {
+    background: #eff6ff;
+}
+
+/* Danger / Remove Button (red) */
+.btn--danger {
+    background: #ff4d4d;
+    border: 1px solid #e60000;
+    color: white;
+}
+
+.btn--danger:hover {
+    background: #cc0000;
+}
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    color: #6b7280;
+    font-size: 16px;
+}
+
+/* Responsive adjustments */
+@media (min-width: 1400px) {
+    .patients-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1399px) {
+    .patients-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .patients-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+    }
+
+    .patient-card {
+        padding: 16px;
+    }
+
+    .patient-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    .patients-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 16px 0;
+    }
+
+    .patient-card {
+        padding: 16px;
+    }
+
+    .patient-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 40px;
+    }
+
+    .patient-actions {
+        flex-direction: column;
+    }
+
+    .patient-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Search Bar Styling */
+.search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.search-bar input {
+    flex: 1;
+}
+
+/* Additional card hover effects */
+.patient-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2E8B57 0%, #228B5A 100%);
+    border-radius: 12px 12px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.patient-card {
+    position: relative;
+}
+
+.patient-card:hover::before {
+    opacity: 1;
+}

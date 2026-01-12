@@ -1,0 +1,247 @@
+require('dotenv').config();
+const express = require('express');
+const sql = require('mssql');
+const cors = require('cors');
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+const config = {
+    user: process.env.DB_USER || 'sa',
+    password: process.env.DB_PASS || 'Shajag123!',
+    server: process.env.DB_SERVER || 'localhost',
+    port: parseInt(process.env.DB_PORT || '1433', 10),
+    database: process.env.DB_NAME || 'clinicdb',
+    options: {
+        encrypt: false,
+        enableArithAbort: true
+    },
+    pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000
+    }
+};
+
+const poolPromise = new sql.ConnectionPool(config).connect().then(pool => {
+    console.log('Connected to MSSQL');
+    return pool;
+}).catch(err => {
+    console.error('Database Connection Failed! Bad Config: ', err);
+    process.exit(1);
+});
+
+// Health
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+// Meta endpoints
+app.get('/api/meta/designations', async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query('SELECT DesignationID, Designation FROM DesignationMst ORDER BY Designation');
+        res.json(result.recordset);
+    } catch (err) { console.error(err); res.status(500).json({ error: 'DB error' }); }
+});
+
+app.get('/api/meta/departments', async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query('SELECT DepartmentID, Department FROM DepartmentMst ORDER BY Department');
+        res.json(result.recordset);
+    } catch (err) { console.error(err); res.status(500).json({ error: 'DB error' }); }
+});
+
+// Patients
+app.get('/api/patients', async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .query('SELECT PatientID, FirstName, MiddleName, LastName, DateOfBirth, Age, GenderID, PhoneNumber, Email, IsActive FROM PatientMaster ORDER BY PatientID DESC');
+        res.json(result.recordset);
+    } catch (err) { console.error(err); res.status(500).json({ error: 'DB error' }); }
+});
+
+app.get('/api/patients/:id', async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('id', sql.BigInt, req.params.id)
+            .query('SELECT * FROM PatientMaster WHERE PatientID = @id');
+        if (!result.recordset.length) return res.status(404).json({ error: 'Not found' });
+        res.json(result.recordset[0]);
+    } catch (err) { console.error(err); res.status(500).json({ error: 'DB error' }); }
+});
+
+/**
+ * POST /api/patients
+ * Accepts:
+ *  - FirstName (required)
+ *  - MiddleName, LastName
+ *  - DateOfBirth (YYYY-MM-DD) OR Age (int) -> DOB fallback
+ *  - GenderID OR Gender (string) -> maps to GenderID
+ *  - PhoneNumber, Email, AddressLine1, IsActive
+ *
+ * This handler is defensive: sets defaults for required DB not-null columns
+ * and logs the incoming payload to help debugging.
+ */
+app.post('/api/patients', async (req, res) => {
+    try {
+        const body = req.body || {};
+        console.log('POST /api/patients incoming body:', body);
+
+        const FirstName = body.FirstName;
+        const MiddleName = body.MiddleName || null;
+        const LastName = body.LastName || null;
+        let DateOfBirth = body.DateOfBirth || null; // prefer explicit DOB
+        const PhoneNumber = body.PhoneNumber || null;
+        const Email = body.Email || null;
+        const AddressLine1 = body.AddressLine1 || null;
+        const Age = (typeof body.Age !== 'undefined' && body.Age !== null && body.Age !== '') ? parseInt(body.Age, 10) : null;
+
+        // Determine GenderID: prefer explicit numeric body.GenderID, else map from body.Gender string, else default
+        let GenderID = null;
+        if (typeof body.GenderID !== 'undefined' && body.GenderID !== null) {
+            GenderID = parseInt(body.GenderID, 10);
+        } else if (body.Gender) {
+            const g = String(body.Gender).toLowerCase();
+            if (g === 'male' || g === 'm') GenderID = 1;
+            else if (g === 'female' || g === 'f') GenderID = 2;
+            else GenderID = 3;
+        } else {
+            // safe default if nothing provided
+            GenderID = 3; // "Other/Unspecified"
+        }
+
+        // If DateOfBirth not provided but Age provided, derive a safe DOB (Jan 1 of birth year)
+        if (!DateOfBirth && Age && !isNaN(Age)) {
+            const year = (new Date()).getFullYear() - Age;
+            DateOfBirth = `${year}-01-01`; // SQL Date format 'YYYY-MM-DD' works
+        }
+
+        if (!FirstName) {
+            return res.status(400).json({ error: 'FirstName required' });
+        }
+
+        // Ensure required not-null DB columns are provided or have defaults
+        if (!GenderID) GenderID = 3;
+
+        const pool = await poolPromise;
+        const request = pool.request();
+        request.input('FirstName', sql.NVarChar(200), FirstName);
+        request.input('MiddleName', sql.NVarChar(100), MiddleName);
+        request.input('LastName', sql.NVarChar(100), LastName);
+        request.input('DateOfBirth', sql.Date, DateOfBirth || null);
+        request.input('Age', sql.Int, Age || null);
+        request.input('GenderID', sql.Int, GenderID);
+        request.input('PhoneNumber', sql.NVarChar(15), PhoneNumber);
+        request.input('Email', sql.NVarChar(250), Email);
+        request.input('AddressLine1', sql.NVarChar(255), AddressLine1);
+
+        const insertSql =
+            'INSERT INTO PatientMaster (FirstName, MiddleName, LastName, DateOfBirth, Age, GenderID, PhoneNumber, Email, AddressLine1, IsActive, CreatedAt) ' +
+            'OUTPUT INSERTED.PatientID ' +
+            'VALUES (@FirstName, @MiddleName, @LastName, @DateOfBirth, @Age, @GenderID, @PhoneNumber, @Email, @AddressLine1, 1, SYSDATETIME())';
+
+        const result = await request.query(insertSql);
+
+        if (!result.recordset || !result.recordset.length) {
+            console.warn('INSERT returned no recordset:', result);
+            return res.status(500).json({ error: 'Insert failed' });
+        }
+
+        res.status(201).json({ PatientID: result.recordset[0].PatientID });
+    } catch (err) {
+        console.error('Error in POST /api/patients:', err);
+        // If mssql/tedious provides detailed messages, include them
+        if (err && err.originalError && err.originalError.info) {
+            return res.status(500).json({ error: 'DB error', details: err.originalError.info });
+        }
+        res.status(500).json({ error: 'DB error' });
+    }
+});
+
+// Staff
+app.get('/api/staff', async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .query('SELECT StaffID, FirstName, MiddleName, LastName, Mobile, Email, DepartmentID, DesignationID FROM StaffMaster ORDER BY StaffID DESC');
+        res.json(result.recordset);
+    } catch (err) { console.error(err); res.status(500).json({ error: 'DB error' }); }
+});
+
+app.post('/api/staff', async (req, res) => {
+    try {
+        const body = req.body || {};
+        const FirstName = body.FirstName;
+        const MiddleName = body.MiddleName || null;
+        const LastName = body.LastName || null;
+        const GenderID = body.GenderID || 1;
+        const DOB = body.DOB || null;
+        const Mobile = body.Mobile;
+        const Email = body.Email || null;
+        const DepartmentID = body.DepartmentID || null;
+        const DesignationID = body.DesignationID || null;
+        const StaffCategoryID = body.StaffCategoryID || null;
+        const UserRoleID = body.UserRoleID || 1;
+
+        if (!FirstName || !Mobile) return res.status(400).json({ error: 'FirstName and Mobile required' });
+
+        const pool = await poolPromise;
+        const request = pool.request();
+        request.input('FirstName', sql.NVarChar(200), FirstName);
+        request.input('MiddleName', sql.NVarChar(100), MiddleName);
+        request.input('LastName', sql.NVarChar(100), LastName);
+        request.input('GenderID', sql.Int, GenderID);
+        request.input('DOB', sql.Date, DOB);
+        request.input('Mobile', sql.NVarChar(15), Mobile);
+        request.input('Email', sql.NVarChar(250), Email);
+        request.input('DepartmentID', sql.Int, DepartmentID);
+        request.input('DesignationID', sql.Int, DesignationID);
+        request.input('StaffCategoryID', sql.Int, StaffCategoryID);
+        request.input('UserRoleID', sql.Int, UserRoleID);
+
+        const insertStaffSql =
+            'INSERT INTO StaffMaster (FirstName, MiddleName, LastName, GenderID, DOB, Mobile, Email, DepartmentID, DesignationID, StaffCategoryID, UserRoleID, CreatedAt) ' +
+            'OUTPUT INSERTED.StaffID ' +
+            'VALUES (@FirstName, @MiddleName, @LastName, @GenderID, @DOB, @Mobile, @Email, @DepartmentID, @DesignationID, @StaffCategoryID, @UserRoleID, SYSDATETIME())';
+
+        const result = await request.query(insertStaffSql);
+        res.status(201).json({ StaffID: result.recordset[0].StaffID });
+    } catch (err) { console.error(err); res.status(500).json({ error: 'DB error' }); }
+});
+
+// Appointments
+app.post('/api/appointments', async (req, res) => {
+    try {
+        const body = req.body || {};
+        const { PatientID, Mobile, DepartmentID, DoctorID, AppointmentDate, AppointmentStartTime, AppointmentTypeID = null, Note = null } = body;
+
+        if (!PatientID || !Mobile || !DepartmentID || !DoctorID || !AppointmentDate || !AppointmentStartTime) {
+            return res.status(400).json({ error: 'Missing required appointment fields' });
+        }
+
+        const pool = await poolPromise;
+        const request = pool.request();
+        request.input('PatientID', sql.BigInt, PatientID);
+        request.input('Mobile', sql.NVarChar(15), Mobile);
+        request.input('DepartmentID', sql.Int, DepartmentID);
+        request.input('DoctorID', sql.Int, DoctorID);
+        request.input('AppointmentDate', sql.Date, AppointmentDate);
+        request.input('AppointmentStartTime', sql.Time, AppointmentStartTime);
+        request.input('AppointmentTypeID', sql.Int, AppointmentTypeID);
+        request.input('Note', sql.NVarChar(500), Note);
+
+        const insertApptSql =
+            'INSERT INTO PatientSchedule (PatientID, Mobile, DepartmentID, DoctorID, AppointmentDate, AppointmentStartTime, AppointmentTypeID, Note, AppointmentStatus, IsCancelled, CreatedAt) ' +
+            'OUTPUT INSERTED.ScheduleID ' +
+            "VALUES (@PatientID, @Mobile, @DepartmentID, @DoctorID, @AppointmentDate, @AppointmentStartTime, @AppointmentTypeID, @Note, 'Scheduled', 0, SYSDATETIME())";
+
+        const result = await request.query(insertApptSql);
+        res.status(201).json({ ScheduleID: result.recordset[0].ScheduleID });
+    } catch (err) { console.error(err); res.status(500).json({ error: 'DB error' }); }
+});
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Clinic API listening on ${PORT}`));

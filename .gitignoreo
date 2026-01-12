@@ -1,0 +1,7 @@
+.env
+.DS_Store
+.idea/
+node_modules/
+mssql-data-backup.tar.gz
+*.log
+

@@ -1,0 +1,23 @@
+/* Main Style File - Imports all CSS modules */
+
+/* CSS Variables and Base Styles */
+@import url('base.css');
+
+/* Component Styles */
+@import url('components.css');
+
+/* Layout Styles */
+@import url('layout.css');
+
+/* View-specific Styles */
+@import url('views/dashboard.css');
+@import url('views/appointments.css');
+@import url('views/patients.css');
+@import url('views/prescription.css');
+@import url('views/therapy.css');
+@import url('views/diet.css');
+@import url('views/reports.css');
+@import url('views/PrescriptionManagement.css');
+@import url('views/communication.css');
+/* Light Theme Override - MUST BE LAST */
+@import url('light-theme-force.css');

@@ -1,0 +1,673 @@
+/* Staff Management Styles - Professional Medical Theme */
+
+/* Staff Management View */
+#staffManagementView {
+    padding: 0;
+    background: #f5f7fa;
+}
+
+.staff-overview {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Statistics Grid - COMPACT VERSION */
+.staff-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Reduced min-width */
+    gap: 16px; /* Reduced gap */
+    margin-bottom: 24px; /* Reduced margin */
+}
+
+.staff-stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px; /* Reduced from 24px */
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Reduced gap */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.staff-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.staff-stat-icon {
+    /* Aggressively Reduced Size */
+    font-size: 20px; /* Reduced from 40px */
+    width: 40px;     /* Reduced from 56px */
+    height: 40px;    /* Reduced from 56px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #21808D 0%, #1a6570 100%);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(33, 128, 141, 0.2);
+}
+
+.staff-stat-content {
+    flex: 1;
+}
+
+.staff-stat-content h3 {
+    font-size: 24px; /* Reduced from 32px */
+    font-weight: 700;
+    color: #21808D;
+    margin: 0 0 2px 0;
+    line-height: 1;
+}
+
+.staff-stat-content p {
+    font-size: 13px; /* Reduced from 14px */
+    color: #6b7280;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Filters Section */
+.staff-filters {
+    background: white;
+    border-radius: 12px;
+    padding: 16px; /* Reduced padding */
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    align-items: end;
+}
+
+.staff-filters .filter-group {
+    margin-bottom: 0;
+}
+
+/* Staff Grid - Tighter Layout */
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Reduced from 360px to fit more cards */
+    gap: 16px; /* Reduced gap */
+}
+
+/* Staff Card - COMPACT VERSION */
+.staff-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.staff-card:hover {
+    border-color: #21808D;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(33, 128, 141, 0.15);
+}
+
+.staff-card-header {
+    background: linear-gradient(135deg, #21808D 0%, #1a6570 100%);
+    padding: 16px; /* Reduced from 24px */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 90px; /* Fixed smaller height */
+}
+
+.staff-avatar {
+    /* Aggressively Reduced Size */
+    font-size: 32px; /* Reduced from 64px */
+    width: 56px;     /* Reduced from 80px */
+    height: 56px;    /* Reduced from 80px */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.staff-status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 10px; /* Smaller badge */
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.staff-status-badge.status-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.staff-status-badge.status-inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.staff-status-badge.status-on-leave {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.staff-card-body {
+    padding: 16px; /* Reduced from 24px */
+}
+
+.staff-name {
+    font-size: 16px; /* Reduced from 20px */
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 2px 0;
+}
+
+.staff-role {
+    font-size: 12px; /* Reduced from 14px */
+    color: #21808D;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+}
+
+.staff-id {
+    display: none; /* Hidden to save space, or make font-size: 10px */
+}
+
+.staff-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Reduced gap */
+}
+
+.staff-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px; /* Compact padding */
+    background: #f9fafb;
+    border-radius: 6px;
+}
+
+.detail-icon {
+    font-size: 14px; /* Reduced */
+    width: 24px;     /* Reduced */
+    height: 24px;    /* Reduced */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid #e5e7eb;
+}
+
+.detail-text {
+    font-size: 12px; /* Reduced */
+    color: #4b5563;
+    flex: 1;
+    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.staff-card-footer {
+    padding: 12px 16px; /* Reduced padding */
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.staff-card-footer .btn--sm {
+    flex: 1;
+    font-size: 11px; /* Smaller font */
+    padding: 6px 12px;
+    height: 30px;
+}
+
+.btn--danger {
+    background: #ef4444;
+    color: white;
+}
+
+.btn--danger:hover {
+    background: #dc2626;
+}
+
+/* Empty State - Compact */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed #e5e7eb;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #4b5563;
+    margin: 0 0 4px 0;
+}
+
+.empty-state p {
+    font-size: 13px;
+    color: #9ca3af;
+    margin: 0 0 16px 0;
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #21808D 0%, #1a6570 100%);
+    color: white;
+}
+
+.modal-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+/* Form Styles */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 13px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #21808D;
+    box-shadow: 0 0 0 3px rgba(33, 128, 141, 0.1);
+}
+
+/* More Info Modal Specific Styles */
+.more-info-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, #21808D 0%, #1a6570 100%);
+    color: white;
+}
+
+.more-info-avatar {
+    font-size: 48px;
+    width: 72px;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.more-info-header h2 {
+    font-size: 24px;
+    margin: 0 0 4px 0;
+    color: white;
+}
+
+.more-info-role {
+    font-size: 14px;
+    margin: 0 0 8px 0;
+    opacity: 0.9;
+}
+
+.more-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.more-info-section {
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.more-info-section:last-child {
+    grid-column: 1 / -1;
+}
+
+.more-info-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.more-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.more-info-item:last-child {
+    border-bottom: none;
+}
+
+.more-info-item .label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.more-info-item .value {
+    font-size: 13px;
+    color: #1f2937;
+    font-weight: 600;
+    text-align: right;
+}
+
+.salary-highlight {
+    color: #21808D !important;
+    font-size: 14px !important;
+}
+
+.more-info-actions {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    justify-content: flex-end;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.status-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.status-inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .staff-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .more-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .staff-overview {
+        padding: 16px;
+    }
+
+    .staff-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .staff-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .staff-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .more-info-header {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Scrollbar Styling */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f3f4f6;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Button Styles */
+.btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn--primary {
+    background: linear-gradient(135deg, #21808D 0%, #1a6570 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(33, 128, 141, 0.2);
+}
+
+.btn--primary:hover {
+    background: linear-gradient(135deg, #1a6570 0%, #155560 100%);
+    box-shadow: 0 4px 12px rgba(33, 128, 141, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn--outline {
+    background: white;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn--outline:hover {
+    border-color: #21808D;
+    color: #21808D;
+    background: #f0f9fa;
+}
+
+.btn--sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.staff-card {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Staff Wizard */
+.wizard-steps {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.wizard-step {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #e5e7eb;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.wizard-step.active {
+    background: linear-gradient(135deg, #21808D, #1a6570);
+    color: white;
+}
+
+.wizard-panel {
+    display: none;
+}
+
+.wizard-panel.active {
+    display: block;
+}
+
+.wizard-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+}
